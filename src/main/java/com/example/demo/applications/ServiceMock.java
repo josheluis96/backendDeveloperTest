@@ -1,6 +1,7 @@
 package com.example.demo.applications;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -8,12 +9,13 @@ import org.springframework.web.client.RestTemplate;
 public class ServiceMock {
 	
 	
-	
+	@Value("${mock}")
+	private String mock;
 	
 	public String mockproductos() {
 
 		RestTemplate restTemplate = new RestTemplate();
-		return restTemplate.getForObject("https://mocki.io/v1/1433de08-c38a-47da-b941-35d3fbeba824", String.class);
+		return restTemplate.getForObject(mock, String.class);
 	}
 
 }
