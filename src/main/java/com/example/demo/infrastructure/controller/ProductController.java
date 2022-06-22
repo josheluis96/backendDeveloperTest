@@ -1,6 +1,8 @@
 package com.example.demo.infrastructure.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -24,7 +26,6 @@ import com.example.demo.applications.ServiceProductInt;
 import com.example.demo.applications.ValidatorServiceInt;
 import com.example.demo.domain.PtProduct;
 import com.example.demo.domain.Response;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -60,11 +61,11 @@ public class ProductController {
 				{
 					client.setRegistrationDate(LocalDate.now());
 					client.setUpdateDate(null);
-					res.setProduct(clienteInt.savePtProduct(client));
+					res.getProduct().add(clienteInt.savePtProduct(client));
 					return new ResponseEntity<>(res, HttpStatus.CREATED); 
 				}else {
 					res.setMessageDescription("Cliente ya registrado");
-					res.setProduct(client2);
+					res.getProduct().add(client);
 					return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST); 
 				}
 
@@ -72,7 +73,7 @@ public class ProductController {
 			
 		} catch (Exception e) {
 			res.setMessageDescription(e.getMessage());
-			res.setProduct(client);
+			res.getProduct().add(client);
 			log.error(e);
 			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -90,7 +91,7 @@ public class ProductController {
 					return new ResponseEntity<>(res, HttpStatus.OK); 
 				}else {
 					res.setMessageDescription("Cliente registrado");
-					res.setProduct(client2);
+					res.getProduct().add(client2);					
 					return new ResponseEntity<>(res, HttpStatus.OK); 
 				}
 	
@@ -116,7 +117,8 @@ public class ProductController {
 					client.setUpdateDate(LocalDate.now());
 					
 					res.setMessageDescription("Cliente actualizado");
-					res.setProduct(clienteInt.savePtProduct(client));
+					res.getProduct().add(clienteInt.savePtProduct(client));
+					
 					return new ResponseEntity<>(res, HttpStatus.OK); 
 				}
 
@@ -124,14 +126,14 @@ public class ProductController {
 			
 		} catch (Exception e) {
 			res.setMessageDescription(e.getMessage());
-			res.setProduct(client);
+			res.getProduct().add(client);
 			log.error(e);
 			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
 	
-@GetMapping(value = "/product/mock")
+@PutMapping(value = "/product/mock")
 public ResponseEntity < Response > mockProducto() {
 	Response res = new Response();
 	try {
@@ -139,7 +141,6 @@ public ResponseEntity < Response > mockProducto() {
 		JSONObject jsonObject = new JSONObject(mock.mockproductos());
 		
 		 JSONArray values =  jsonObject.getJSONArray("prods");
-		 log.error(values);
 		  for (int i = 0; i < values.length(); i++) {
 			    
 			    JSONObject animal = values.getJSONObject(i); 
@@ -153,11 +154,38 @@ public ResponseEntity < Response > mockProducto() {
 			    insertClient(client);
 			  }
 		 
-		return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(res, HttpStatus.OK);
 	} catch (Exception e) {
 		res.setMessageDescription(e.getMessage());
 		log.error(e);
 		return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
 }}
+
+@GetMapping(value = "/product/mock")
+public ResponseEntity < Response > mockProductoAll() {
+	Response res = new Response();
+	try {
+
+		JSONObject jsonObject = new JSONObject(mock.mockproductos());
+		
+		 JSONArray values =  jsonObject.getJSONArray("prods");
+		  for (int i = 0; i < values.length(); i++) {
+			    
+			    JSONObject animal = values.getJSONObject(i); 
+			    PtProduct client = new PtProduct();
+			    client.setCodProduct(animal.getString("cod"));
+			    client.setName(animal.getString("name"));
+			    client.setPrice(animal.getLong("price"));
+			    client.setStock(animal.getLong("stock"));
+			    res.getProduct().add(client);
+			  }
+		 
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	} catch (Exception e) {
+		res.setMessageDescription(e.getMessage());
+		log.error(e);
+		return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+}}
+
 
 }

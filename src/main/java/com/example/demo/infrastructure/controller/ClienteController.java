@@ -53,11 +53,11 @@ public class ClienteController {
 				{
 					client.setRegistrationDate(LocalDate.now());
 					client.setUpdateDate(null);
-					res.setClient(clienteInt.saveptcliente(client));
+					res.getClient().add(clienteInt.saveptcliente(client));
 					return new ResponseEntity<>(res, HttpStatus.CREATED); 
 				}else {
 					res.setMessageDescription("Cliente ya registrado");
-					res.setClient(client2);
+					res.getClient().add(client2);
 					return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST); 
 				}
 
@@ -65,7 +65,7 @@ public class ClienteController {
 			
 		} catch (Exception e) {
 			res.setMessageDescription(e.getMessage());
-			res.setClient(client);
+			res.getClient().add(client);
 			log.error(e);
 			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -83,7 +83,8 @@ public class ClienteController {
 					return new ResponseEntity<>(res, HttpStatus.OK); 
 				}else {
 					res.setMessageDescription("Cliente registrado");
-					res.setClient(client2);
+					
+					res.getClient().add(client2);
 					return new ResponseEntity<>(res, HttpStatus.OK); 
 				}
 	
@@ -109,7 +110,8 @@ public class ClienteController {
 					client.setUpdateDate(LocalDate.now());
 					
 					res.setMessageDescription("Cliente actualizado");
-					res.setClient(clienteInt.saveptcliente(client));
+				
+					res.getClient().add(clienteInt.saveptcliente(client));
 					return new ResponseEntity<>(res, HttpStatus.OK); 
 				}
 
@@ -117,7 +119,7 @@ public class ClienteController {
 			
 		} catch (Exception e) {
 			res.setMessageDescription(e.getMessage());
-			res.setClient(client);
+			res.getClient().add(client);
 			log.error(e);
 			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

@@ -53,11 +53,12 @@ public class StoreController {
 				{
 					client.setRegistrationDate(LocalDate.now());
 					client.setUpdateDate(null);
-					res.setStore(clienteInt.saveptStore(client));
+		
+					res.getStore().add(clienteInt.saveptStore(client));
 					return new ResponseEntity<>(res, HttpStatus.CREATED); 
 				}else {
 					res.setMessageDescription("Cliente ya registrado");
-					res.setStore(client2);
+					res.getStore().add(client2);
 					return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST); 
 				}
 
@@ -65,7 +66,7 @@ public class StoreController {
 			
 		} catch (Exception e) {
 			res.setMessageDescription(e.getMessage());
-			res.setStore(client);
+			res.getStore().add(client);
 			log.error(e);
 			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -83,7 +84,7 @@ public class StoreController {
 					return new ResponseEntity<>(res, HttpStatus.OK); 
 				}else {
 					res.setMessageDescription("Cliente registrado");
-					res.setStore(client2);
+					res.getStore().add(client2);
 					return new ResponseEntity<>(res, HttpStatus.OK); 
 				}
 	
@@ -109,15 +110,13 @@ public class StoreController {
 					client.setUpdateDate(LocalDate.now());
 					
 					res.setMessageDescription("Cliente actualizado");
-					res.setStore(clienteInt.saveptStore(client));
+					res.getStore().add(clienteInt.saveptStore(client));
 					return new ResponseEntity<>(res, HttpStatus.OK); 
 				}
 
-			
-			
 		} catch (Exception e) {
 			res.setMessageDescription(e.getMessage());
-			res.setStore(client);
+			res.getStore().add(client);
 			log.error(e);
 			return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
